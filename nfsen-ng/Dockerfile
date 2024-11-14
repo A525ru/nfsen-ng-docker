@@ -1,11 +1,11 @@
-FROM php:8.1-apache-bookworm
+FROM php:8.2.25-apache-bookworm
 
-MAINTAINER Konrad Roziewski <kroziewski@gmail.com>
+LABEL A525ru_NFtoolkit based on Mapiiik@github  
 
 WORKDIR /var/www/html
 
 RUN apt-get update -y \
-    && apt-get install -y pkg-config nfdump rrdtool librrd-dev git \
+    && apt-get install -y pkg-config nfdump rrdtool librrd-dev git net-tools iftop tcpdump \
     && apt-get clean -y
 
 RUN a2enmod rewrite deflate headers expires
@@ -14,7 +14,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN echo "extension=rrd.so" >> /usr/local/etc/php/conf.d/rrd.ini
 RUN sed -e '/<Directory \/var\/www\/>/,/<\/Directory>/s/AllowOverride None/AllowOverride All/' -i /etc/apache2/apache2.conf
 
-RUN git clone https://github.com/mbolli/nfsen-ng.git .
+RUN git clone https://github.com/A525ru/nfsen-ng.git .
 COPY settings.php backend/settings/settings.tmpl
 COPY entrypoint.sh /tmp/
 
